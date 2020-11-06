@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const Box = styled.div`
   height: 100vh;
   /* height: 100vh; */
@@ -8,7 +10,7 @@ const Box = styled.div`
 
 const Content = styled.div`
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
 `;
 
 const SidebarLeft = styled.div`
@@ -63,7 +65,7 @@ const BorderTextArea = styled.div`
 `;
 
 const ImageLeft = styled.img`
-  width: 100%;
+  /* width: 100%; */
   height: 700px;
   /* height: 100%; */
 `;
@@ -178,6 +180,71 @@ const LabelFile = styled.label`
   text-align: center;
 `;
 
+const StyledIcon = styled(FontAwesomeIcon)`
+  color: #fff;
+  margin: 3px;
+`;
+
+const ButtonDelete = styled.div`
+  text-decoration: none;
+  color: #fff;
+  align-items: center;
+  display: inline-flex;
+  cursor: pointer;
+  margin-left: 10px;
+`;
+
+const StyledIconTrashAlt = styled(FontAwesomeIcon)`
+  color: #000;
+  margin: 3px;
+`;
+
+const BoxForms = styled.div`
+  justify-content: center;
+  display: flex;
+
+  @media (max-width: 780px) {
+    margin-top: 320px;
+    /* width: 340px; */
+  }
+`;
+
+const CadUser = styled.div`
+  width: 1190px;
+  margin-bottom: 50px;
+  justify-content: center;
+  display: grid;
+
+  @media (max-width: 780px) {
+    
+    width: 340px;
+  }
+`;
+
+const TitleFormEditor = styled.span`
+  text-align: center;
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const BaseEditor = styled.div`
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
+
+const Editor = styled.div`
+  justify-content: space-between;
+  display: flex;
+  margin-top: 10px;
+  border-bottom: 1px solid red;
+`;
+
+const BaseNews = styled.div`
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
+
 export {
   Box,
   Content,
@@ -199,4 +266,13 @@ export {
   BorderTextArea,
   LabelFile,
   InputFile,
+  StyledIcon,
+  ButtonDelete,
+  StyledIconTrashAlt,
+  BoxForms,
+  CadUser,
+  TitleFormEditor,
+  BaseEditor,
+  Editor,
+  BaseNews,
 };

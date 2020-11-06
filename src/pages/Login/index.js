@@ -45,7 +45,7 @@ function App({ history }) {
     <Box>
       <Content style={{ paddingTop: 0 }}>
         <SidebarLeft>
-          <ImageLeft src={imgSidebar} alt="Iamge sideabar" />
+          <ImageLeft src={imgSidebar} alt="Image sideabar" />
         </SidebarLeft>
         <ContainerRigth>
           <BaseForm>

@@ -7,7 +7,11 @@ import api from "../../services/api";
 
 import PostValidator from "../../validators/PostValidator";
 
+import UserValidator from "../../validators/UserValidator";
+
 import Navbar from "../../components/Navbar";
+
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 import {
   Box,
@@ -25,22 +29,39 @@ import {
   InputButton,
   AlertFields,
   TitleSecundary,
-  FormLoginH1,
   TextArea,
   BorderTextArea,
   LabelFile,
   InputFile,
+  ButtonDelete,
+  StyledIconTrashAlt,
+  BoxForms,
+  CadUser,
+  TitleFormEditor,
+  BaseEditor,
+  Editor,
+  BaseNews,
 } from "./Dashboard.styled";
 
-import imgSidebar from "../../assets/img-sidebar.png";
+import imgSidebar from "../../assets/position_posts_model.png";
 
 function App() {
   const [titleValue, setTitleValue] = useState("");
   const [subTitleValue, setSubTitleValue] = useState("");
   const [visibilityValue, setVisibilityValue] = useState("");
+
+  const [fullNameValue, setFullNameValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+
   const [categoryValue, setCategoryValue] = useState("");
+
+  const [user, setUser] = useState([]);
+
+  const [posts, setPosts] = useState([]); 
+
   const [category, setCategory] = useState([]);
-  const [authorValue, setAuthorValue] = useState("");
+
   const [contentValue, setContentValue] = useState("");
   const [referenceUuid, setReferenceUuid] = useState("");
 
@@ -74,9 +95,20 @@ function App() {
     setContentValue(e.target.value);
   }
 
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  // }
+  function handleFullName(e) {
+    e.preventDefault();
+    setFullNameValue(e.target.value);
+  }
+
+  function handleEmail(e) {
+    e.preventDefault();
+    setEmailValue(e.target.value);
+  }
+
+  function handlePassword(e) {
+    e.preventDefault();
+    setPasswordValue(e.target.value);
+  }
 
   const createPost = async () => {
     const token = localStorage.getItem("@HIGYA_TOKEN");
@@ -93,17 +125,18 @@ function App() {
         imageNameReal: "",
         category: categoryValue,
         author: author,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
-      // {
-      //   headers: {
-      //     Accept: "application/json",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // }
     );
 
     if (response.data.error === false) {
       handleFireBaseUpload();
+      setPosts(response.data.posts);
     }
 
     cleanFields();
@@ -117,6 +150,10 @@ function App() {
     setCategoryValue("");
     setImageAsFile("");
     setLabelFile("Anexar Imagem");
+
+    setFullNameValue("");
+    setEmailValue("");
+    setPasswordValue("");
   }
 
   const categories = async () => {
@@ -128,7 +165,6 @@ function App() {
       },
     });
     setCategory(response.data.categories);
-    console.log(response.data.categories);
   };
 
   const handleImageAsFile = (e) => {
@@ -136,10 +172,11 @@ function App() {
     const image = e.target.files[0];
 
     let extension = image.type.split("/");
-    console.log(extension[1]);
+    // console.log(extension[1]);
 
     if (extension[0] !== "image") {
       console.error("Apenas imagens são suportadas");
+      alert("Apenas imagens são suportadas");
 
       setImageAsFile("");
     } else {
@@ -185,8 +222,89 @@ function App() {
     );
   };
 
+  const createUser = async () => {
+    const token = localStorage.getItem("@HIGYA_TOKEN");
+
+    const response = await api.post(
+      "/create-user",
+      {
+        fullName: fullNameValue,
+        email: emailValue,
+        password: passwordValue,
+        occupation: "editor",
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.data.error === true) {
+      alert("E-mail já cadastrado!");
+    } else {
+      setUser(response.data.users);
+      cleanFields();
+    }
+
+    // cleanFields();
+  };
+
+  const loadUsers = async () => {
+    const token = localStorage.getItem("@HIGYA_TOKEN");
+    const response = await api.get("/users", {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setUser(response.data.users);
+  };
+
+  const deleteUser = async (id) => {
+    const token = localStorage.getItem("@HIGYA_TOKEN");
+
+    const response = await api.delete(`/delete-user?id=${id}`, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setUser(response.data.info);
+  };
+
+  const loadPosts = async () => {
+    const token = localStorage.getItem("@HIGYA_TOKEN");
+    const response = await api.get("/posts", {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setPosts(response.data.postAll);
+  };
+
+  const deletePost = async (id) => {
+    const user_id = localStorage.getItem("@HIGYA_USER");
+    const token = localStorage.getItem("@HIGYA_TOKEN");
+  
+    const response = await api.delete(
+      `/delete-post?id=${id}&author_id=${user_id}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    setPosts(response.data.info);
+  };
+
   useEffect(() => {
     categories();
+    loadUsers();
+    loadPosts();
   }, []);
 
   return (
@@ -199,10 +317,6 @@ function App() {
           </SidebarLeft>
           <ContainerRigth>
             <BaseForm>
-              {/* <FormLoginH1>
-              <strong>Bem-vindo</strong> Crie suas postagens
-            </FormLoginH1> */}
-
               <TitleSecundary>
                 Todos os conteúdos são postados por aqui!
               </TitleSecundary>
@@ -266,8 +380,8 @@ function App() {
                     <select
                       value={categoryValue}
                       onChange={(e) => handleCategory(e)}
-                    >
-                      {categoryValue == "" && (
+                    > 
+                      {categoryValue === "" && (
                         <option value="selecione">selecione</option>
                       )}
                       {category.length > 0 &&
@@ -293,7 +407,7 @@ function App() {
                     Obrigatório
                   </AlertFields>
 
-                  <LabelFile for="selecao-arquivo">{labelFile}</LabelFile>
+                  <LabelFile htmlFor="selecao-arquivo">{labelFile}</LabelFile>
                   <InputFile
                     id="selecao-arquivo"
                     type="file"
@@ -301,26 +415,113 @@ function App() {
                   />
                 </RegisterForm>
 
-                <div style={{ justifyContent: "center" }}>
-                  <InputButton
-                    type="submit"
-                    value="Enviar"
-                    onClick={() => {
-                      PostValidator(
-                        titleValue,
-                        contentValue,
-                        visibilityValue,
-                        categoryValue,
-                        () => createPost()
-                      );
-                    }}
-                  />
-                </div>
+                <InputButton
+                  type="submit"
+                  value="Enviar"
+                  onClick={() => {
+                    PostValidator(
+                      titleValue,
+                      contentValue,
+                      visibilityValue,
+                      categoryValue,
+                      () => createPost()
+                    );
+                  }}
+                />
               </Register>
             </BaseForm>
           </ContainerRigth>
         </Content>
-        {/* poi */}
+
+        <BoxForms>
+          <CadUser>
+            <TitleFormEditor>Cadastro de editores</TitleFormEditor>
+            <Register>
+              <RegisterForm action="" onSubmit={handleFireBaseUpload}>
+                <BorderField>
+                  <LabelEmail htmlFor="">Nome completo</LabelEmail>
+                  <Input
+                    type="text"
+                    value={fullNameValue}
+                    onChange={(e) => handleFullName(e)}
+                  />
+                </BorderField>
+
+                <AlertFields>Obrigatório</AlertFields>
+
+                <BorderField>
+                  <LabelEmail htmlFor="">E-mail</LabelEmail>
+                  <Input
+                    type="email"
+                    value={emailValue}
+                    onChange={(e) => handleEmail(e)}
+                  />
+                </BorderField>
+
+                <AlertFields>Obrigatório</AlertFields>
+
+                <BorderField>
+                  <LabelEmail htmlFor="">Senha</LabelEmail>
+                  <Input
+                    type="password"
+                    value={passwordValue}
+                    onChange={(e) => handlePassword(e)}
+                  />
+                </BorderField>
+                <AlertFields>Obrigatório</AlertFields>
+              </RegisterForm>
+
+              <InputButton
+                type="submit"
+                value="Enviar"
+                onClick={() => {
+                  UserValidator(fullNameValue, emailValue, passwordValue, () =>
+                    createUser()
+                  );
+                }}
+              />
+            </Register>
+
+            <BaseEditor>
+              <TitleFormEditor>Editores cadastrados</TitleFormEditor>
+              {user.map((item) => (
+                <Editor key={item._id}>
+                  <span>
+                    {item.fullName.length > 50
+                      ? item.fullName.substring(0, 40)
+                      : item.fullName}
+                  </span>
+
+                  <ButtonDelete onClick={() => deleteUser(item._id)}>
+                    <StyledIconTrashAlt
+                      icon={faTrashAlt}
+                      size="1x"
+                      color="red"
+                    />
+                  </ButtonDelete>
+                </Editor>
+              ))}
+            </BaseEditor>
+
+            <BaseNews>
+              <TitleFormEditor>Noticias cadastradas</TitleFormEditor>
+              {posts.map((item) => (
+                <Editor key={item._id}>
+                  <span>
+                    Título:{" "}
+                    {item.title.length > 50
+                      ? item.title.substring(0, 40)
+                      : item.title}
+                  </span>
+
+                  <ButtonDelete onClick={() => deletePost(item._id)}>
+                    <StyledIconTrashAlt icon={faTrashAlt} size="1x" />
+                  </ButtonDelete>
+                </Editor>
+              ))}
+            </BaseNews>
+          </CadUser>
+        </BoxForms>
       </Box>
     </>
   );

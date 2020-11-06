@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import ImgLogo from "../../assets/UOL_logo.png";
+import ImgHygia from "../../assets/logo_hygia.png";
 import ImgClube1 from "../../assets/inter30.png";
 import ImgClube2 from "../../assets/fla30.png";
 import ImgClube3 from "../../assets/cam30.png";
@@ -21,8 +21,6 @@ import {
   SecondRigth,
   SecondLeftCard,
   CardImage1,
-  // CardImage2,
-  // CardImage3,
   ContentCardImage,
   BaseCard,
   ProminentArea,
@@ -33,9 +31,6 @@ import {
   GeneralContentCardImage,
   Top,
   Logo,
-  Infos,
-  Search,
-  Input,
   ThirdRigth,
   CardSport,
   CardSportSubTitle,
@@ -66,21 +61,25 @@ export default function Home() {
   const postsAll = async () => {
     const response = await api.get("/posts");
 
-    let arrHeadline = [];
-    arrHeadline = response.data.headline;
-    setHeadline(arrHeadline);
+    if (response.data.headline.lenght === 0) {
+      console.log("Publique uma manchete");
+    } else {
+      let arrHeadline = [];
+      arrHeadline = response.data.headline;
+      setHeadline(arrHeadline);
 
-    let arrFeatured = [];
-    arrFeatured = response.data.featured;
-    setFeatured(arrFeatured);
+      let arrFeatured = [];
+      arrFeatured = response.data.featured;
+      setFeatured(arrFeatured);
 
-    let arrSpecial = [];
-    arrSpecial = response.data.special;
-    setSpecial(arrSpecial);
+      let arrSpecial = [];
+      arrSpecial = response.data.special;
+      setSpecial(arrSpecial);
 
-    let arrSeveral = [];
-    arrSeveral = response.data.several;
-    setSeveral(arrSeveral);
+      let arrSeveral = [];
+      arrSeveral = response.data.several;
+      setSeveral(arrSeveral);
+    }
   };
 
   useEffect(() => {
@@ -93,15 +92,9 @@ export default function Home() {
         <Navbar />
         <Box>
           <Top>
-            <Logo src={ImgLogo} alt="Logo" />
+            <Logo src={ImgHygia} alt="Logo" />
             teste tecnico
-            {/* <Infos />
-            <Search>
-              <Input type="text"/> 
-              <div className="fas fa-list-alt" />
-            </Search> */}
           </Top>
-          {/* <div className="line" style={{borderBottom:" 1px solid #cccccc"}}></div> */}
           <First>
             {headline.map((item) => (
               <Main key={item._id}>
@@ -258,7 +251,7 @@ export default function Home() {
               </SecondLeftCard>
             </SecondLeft>
             <SecondRigth>
-              <span>Mercado de trabalho</span>
+              <span>Mercado de trabalho(em desenvolvimento)</span>
             </SecondRigth>
           </Highlighted>
 
@@ -287,7 +280,7 @@ export default function Home() {
               </SecondLeftCard>
             </SecondLeft>
             <ThirdRigth>
-              <span>Colunistas</span>
+              <span>Colunistas(em desenvolvimento)</span>
             </ThirdRigth>
           </Third>
 

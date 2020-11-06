@@ -26,6 +26,10 @@ const ItenMenu = styled.h3`
   align-items: center;
   display: grid;
   /* text-decoration: none; */
+
+  @media (max-width: 780px) {
+    text-align: center;
+  }
 `;
 
 const Text = styled.div`
