@@ -37,10 +37,10 @@ export default function App() {
                 <StyledIcon icon={faHome} size="1x" />
                 Inicio
               </NavLink>
-              <ButtonLogout onClick={usePageViews}>
+              <NavLink to="/dashboard">
                 <StyledIcon icon={faList} size="1x" />
                 Painel
-              </ButtonLogout>
+              </NavLink>
               <ButtonLogout onClick={logout}>
                 <StyledIcon icon={faDoorOpen} size="1x" />
                 Sair
