@@ -24,7 +24,7 @@ const ItenMenu = styled.h3`
   /* background: brown; */
   text-align: right;
   align-items: center;
-  display: grid;
+  display: flex;
   /* text-decoration: none; */
 
   @media (max-width: 780px) {
@@ -34,6 +34,9 @@ const ItenMenu = styled.h3`
 
 const Text = styled.div`
   margin: 1px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const NavLink = styled(Link)`
@@ -41,6 +44,11 @@ const NavLink = styled(Link)`
   color: #fff;
   align-items: center;
   display: inline-flex;
+  margin-left: 10px;
+
+  @media (max-width: 780px) {
+    margin-left: 0;
+  }
 `;
 
 const StyledIcon = styled(FontAwesomeIcon)`
@@ -57,4 +65,35 @@ const ButtonLogout = styled.div`
   margin-left: 10px;
 `;
 
-export { Navbar, ItenMenu, Text, StyledIcon, NavLink, ButtonLogout };
+const LabelName = styled.div`
+  display: flex;
+  justify-content: end;
+  width: 50%;
+
+  @media (max-width: 780px) {
+    display: none;
+  }
+`;
+
+const BaseOptionsMenu = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 50%;
+
+  @media (max-width: 780px) {
+    width: 100%;
+    justify-content: space-between;
+    margin: 0 5px 0 5px;
+  }
+`;
+
+export {
+  Navbar,
+  ItenMenu,
+  Text,
+  StyledIcon,
+  NavLink,
+  ButtonLogout,
+  LabelName,
+  BaseOptionsMenu,
+};

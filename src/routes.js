@@ -8,10 +8,26 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
 function Routes() {
+  const PrivateRoute = ({ component: Component, ...rest }) => {
+    return (
+      <Route
+        {...rest}
+        render={(props) =>
+          isAuthenticated() ? (
+            <Component {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
+    );
+  };
+
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Home} />
+        <PrivateRoute path="/dashboard" component={Dashboard} />
 
         {window.location.pathname === "/login" && isAuthenticated() === true ? (
           <Redirect to="/" />
@@ -19,12 +35,6 @@ function Routes() {
           <Route path="/login" component={Login} />
         )}
 
-        {window.location.pathname === "/dashboard" &&
-        isAuthenticated() === false ? (
-          <Redirect to="/" />
-        ) : (
-          <Route path="/dashboard" component={Dashboard} />
-        )}
         <Route path="*" component={() => <h3>Page not found</h3>} />
       </Switch>
     </BrowserRouter>

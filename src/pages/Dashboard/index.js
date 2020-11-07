@@ -58,7 +58,7 @@ function App() {
 
   const [user, setUser] = useState([]);
 
-  const [posts, setPosts] = useState([]); 
+  const [posts, setPosts] = useState([]);
 
   const [category, setCategory] = useState([]);
 
@@ -263,6 +263,10 @@ function App() {
   };
 
   const deleteUser = async (id) => {
+    const user_id = localStorage.getItem("@HIGYA_USER");
+
+    if (id === user_id) return alert("Você não pode excluir sua conta!");
+
     const token = localStorage.getItem("@HIGYA_TOKEN");
 
     const response = await api.delete(`/delete-user?id=${id}`, {
@@ -275,20 +279,15 @@ function App() {
   };
 
   const loadPosts = async () => {
-    const token = localStorage.getItem("@HIGYA_TOKEN");
-    const response = await api.get("/posts", {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    
+    const response = await api.get("/posts");
     setPosts(response.data.postAll);
   };
 
   const deletePost = async (id) => {
     const user_id = localStorage.getItem("@HIGYA_USER");
     const token = localStorage.getItem("@HIGYA_TOKEN");
-  
+
     const response = await api.delete(
       `/delete-post?id=${id}&author_id=${user_id}`,
       {
@@ -380,7 +379,7 @@ function App() {
                     <select
                       value={categoryValue}
                       onChange={(e) => handleCategory(e)}
-                    > 
+                    >
                       {categoryValue === "" && (
                         <option value="selecione">selecione</option>
                       )}
